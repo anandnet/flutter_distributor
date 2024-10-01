@@ -202,25 +202,20 @@ class AppPackageMakerAppImage extends AppPackageMaker {
           throw MakeError(value.stderr as String);
         }
       });
-
-      final libFlutterGtkDeps = await _getSharedDependencies(
-        path.join(
-          makeConfig.packagingDirectory.path,
-          '${makeConfig.appName}.AppDir/lib/libflutter_linux_gtk.so',
-        ),
-      );
-
+      // For HarmonyMusic only libayatana & libdbusmenu is neccessary, others already get fetch from system shared
       await Future.wait(
         appSOLibs.map((so) async {
           final referencedSharedLibs =
               await _getSharedDependencies(so.path).then(
-            (d) => d.difference(libFlutterGtkDeps)
+            (d) => d
               ..removeWhere(
-                (lib) => lib.contains('libflutter_linux_gtk.so'),
+                (lib) => !(lib.contains('libayatana') || lib.contains('libdbusmenu')),
               ),
           );
 
           if (referencedSharedLibs.isEmpty) return;
+
+          print("---------------------------------\n\n ${referencedSharedLibs.toList()}\n\n ------------------------------------------");
 
           await $(
             'cp',

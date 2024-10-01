@@ -10,7 +10,8 @@ environment:
 dependencies:
   args: ^2.2.0
   flutter_app_builder: ^0.4.5
-  flutter_app_packager: ^0.4.5
+  flutter_app_packager:
+    path: ../flutter_app_packager
   logging: ^1.0.2
   pubspec_parse: ^1.1.0
 
